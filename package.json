@@ -1,0 +1,18 @@
+{
+  "name": "json2protobuf",
+  "version": "1.0.0",
+  "description": "Parse json to proto buffer message",
+  "main": "index.js",
+  "keywords": [
+    "raml",
+    "json",
+    "protobuf"
+  ],
+  "author": "Mike Wang",
+  "license": "MIT",
+  "dependencies": {
+    "hashmap": "^2.0.6",
+    "jsonfile": "^2.4.0",
+    "string": "^3.3.1"
+  }
+}
