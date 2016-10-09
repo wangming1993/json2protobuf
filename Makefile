@@ -1,6 +1,7 @@
 clean:
 	rm -rf *proto
+	rm -rf proto
 
 
 run:
-	node index.js
+	node index.js --help

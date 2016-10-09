@@ -8,7 +8,7 @@ var map = new HashMap();
 var util = require('./util');
 var path = require('path');
 
-/*raml.loadFile('/home/user/workspace/augmentum/developer/raml/api.raml').then(function(data) {
+/*raml.loadFile('/home/user/workspace//developer/raml/api.raml').then(function(data) {
     //console.log(data.schemas.length)
     //writeFile("raml", data, '.json')
     data.schemas.forEach(function(schema) {
@@ -121,10 +121,6 @@ function parseProperties(properties) {
     return messages
 }
 
-function die() {
-    exit(1)
-}
-
 function generate(message, prefix) {
     var template = prefix + '';
     template += "message "
@@ -158,7 +154,9 @@ function getType(type) {
 }
 
 function writeProto(name, content) {
-    writeFile(name, content, '.proto')
+    var directory = 'proto';
+    mkdir(directory);
+    writeFile(directory + '/' + name, content, '.proto')
 }
 
 function writeFile(name, content, type) {
@@ -168,6 +166,13 @@ function writeFile(name, content, type) {
     fs.writeFile(name + type, content, function(err) {
         if (err != null) throw err
     })
+}
+
+function mkdir(path) {
+    if (fs.existsSync(path)) {
+        return true;
+    }
+    return fs.mkdirSync(path);
 }
 
 function addLine(line, tag, prefix) {
@@ -303,18 +308,23 @@ function setIndex(files) {
     //console.log(map);
 }
 
-function parse(files) {
-    //print(files);
-    var pkg = 'message'
-    var template = descriptor('message')
+function parse(files, isSplit) {
+    var pkg = 'message';
+    var header = descriptor(pkg)
+    var template = '';
     for (var i = files.length - 1; i >= 0; i--) {
-        /*var fileName = getFileName(files[i]);
-        var tpl = descriptor(pkg) + parseJson(files[i])
-        writeProto(fileName, tpl)*/
-
-        template += parseJson(files[i]);
+        if (isSplit) {
+            var fileName = getFileName(files[i]);
+            var tpl = header + parseJson(files[i])
+            writeProto(fileName, tpl)
+        } else {
+            template += parseJson(files[i]);
+        }
     }
-    writeProto(pkg, template)
+    if (!isSplit) {
+        template = header + template;
+        writeProto(pkg, template)
+    }
 }
 
 function isUndefined(value) {
